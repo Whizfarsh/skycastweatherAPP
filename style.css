@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --default-bright-color: #f3f3f3;
+  --default-dark-color: #333;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: 'Inter', sans-serif;
+}
+
+.skycast-main {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+.skycastmain-body {
+  background: url(/weathers/cloudy.jpg);
+  width: 100%;
+  height: 110vh;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+.skycastmain-body::after {
+  content: '';
+  position: absolute;
+  background-color: #333;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 0;
+}
+.SC-desktop-menu {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  z-index: 1;
+  position: absolute;
+}
+.SC-large-search {
+  background-color: #f3f3f3;
+  border-radius: 15px;
+  padding: 1rem;
+}
+.SC-large-search input[type='text'] {
+  border: none;
+  width: 85%;
+  height: auto;
+  background-color: #f3f3f3;
+  color: #333;
+  font-size: 1.4;
+}
+.SC-large-search input[type='text']:focus {
+  outline: none;
+}
+.logo {
+  font-size: 3.2rem;
+  color: #f3f3f3;
+}
+.SC-search-icon {
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+/* SC basic info styles */
+.skycast-basic-info {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  margin: 10vh auto;
+}
+.weather-img-icon {
+  width: 5rem;
+  height: 5rem;
+}
+.SC-current-weather {
+  text-align: center;
+  color: #f3f3f3;
+  font-size: 6.4rem;
+  font-weight: 700;
+}
+.SC-weather-location,
+.SC-weather-date {
+  color: #b8f4b8;
+  text-align: center;
+  font-size: 1.8rem;
+  display: flex;
+  justify-content: center;
+}
+.skycast-full-details {
+  height: auto;
+  padding: 2.4rem;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  column-gap: 2rem;
+}
+.searchwithothers {
+  width: 30%;
+  background: rgba(255, 255, 255, 0.38);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+/* SC DETAILS INFO */
+.SC-condition-details {
+  margin: 2rem 2.4rem;
+  display: flex;
+  flex-direction: column;
+}
+.SC-condition-details h3 {
+  font-size: 2.8rem;
+  border-bottom: 1px solid var(--default-bright-color);
+  text-align: center;
+}
+.SC-details {
+  display: flex;
+  justify-content: space-between;
+  color: var(--default-dark-color);
+  flex-basis: 50%;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 1rem 1.4rem;
+}
+.SC-forecasts {
+  display: flex;
+  gap: 1rem;
+  padding: 1.2rem 0 8px 1.2rem;
+  /* border-bottom: 1px solid var(--default-bright-color); */
+  cursor: pointer;
+}
+.SC--hourly {
+  background-color: #dbdbdb;
+  margin-top: 6.4rem;
+  height: auto;
+  padding: 1.4rem 2rem 1.4rem 2rem;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+.SC-hourly-details {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  gap: 1.4rem;
+  overflow-x: hidden;
+}
+.SC-hourly--TDI {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.2rem;
+  color: var(--default-bright-color);
+  font-weight: 600;
+  background-color: #6e926e;
+  padding: 0.6rem;
+  border-radius: 1rem;
+  flex: 1;
+}
+.SC-hourly--TDI span:nth-child(2) {
+  font-weight: 900;
+}
+.SC--hourly-weather-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+.SC-forecasts-info {
+  border-radius: 0.7rem;
+  color: var(--default-dark-color);
+  background-color: #eafcea;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+.skycast-basic-info--active {
+  color: #f3f3f3;
+  background-color: #6e926e;
+  width: 150px;
+}
+.SC--waethers--forecast {
+  width: 90%;
+  /* background-color: red; */
+  /* align-items: cente; */
+}
+/* SC DAILY WEATHER DETAILS */
+.SC--daily {
+  border-top: 1px solid var(--default-bright-color);
+}
+.SC--daily-forecasts {
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  display: flex;
+  /* justify-content: space-between; */
+  align-content: center;
+  column-gap: 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--default-bright-color);
+}
+.SC--daily-forecasts:last-child {
+  border: none;
+}
+
+/* SC Other countries */
+.SC-other--weathers {
+  width: 30%;
+}
+.SC-rdw {
+  font-size: 1.4rem;
+  color: var(--default-bright-color);
+  text-transform: uppercase;
+}
+.SC--random {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 1);
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.SC-random-countries {
+  background: url(/weathers/sunny.jpg);
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  border-radius: 2.4rem;
+  margin-top: 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.SC-randWeather {
+  display: flex;
+  flex-direction: column;
+}
