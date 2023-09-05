@@ -1,0 +1,43 @@
+@media (max-width: 50rem) {
+  .skycastmain-body {
+    height: 150vh;
+  }
+  /*  */
+  .skycast-basic-info {
+    margin-top: 25vh;
+  }
+  /*  */
+  /* SC BASIC WEATHER INFORMATIONS */
+  .SC-condition-details h3 {
+    font-size: 1.8rem;
+  }
+  .SC-details {
+    font-size: 1.4;
+    font-weight: 600;
+    padding: 0.5rem 0.1rem 0.1em 0.2rem;
+  }
+
+  .skycast-basic-info--active {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+  .SC--hourly {
+    margin-top: 2.3rem;
+  }
+  /*  ---- */
+  /* SC DAILY WEATHERS */
+  .SC--daily-forecast {
+    column-gap: 2.4rem;
+    font-size: 1.4rem;
+  }
+  /* --- */
+  /* SC RANDOM WEATHERS */
+  .SC-rdw {
+    font-size: 1.2rem;
+  }
+  .SC--random {
+    padding: 1.2rem;
+  }
+  /* --- */
+}
