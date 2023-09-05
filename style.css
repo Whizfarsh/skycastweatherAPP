@@ -52,7 +52,7 @@ html {
 .SC-large-search {
   background-color: #f3f3f3;
   border-radius: 15px;
-  padding: 1rem;
+  padding: 1.2rem;
 }
 .SC-large-search input[type='text'] {
   border: none;
@@ -192,23 +192,34 @@ html {
   width: 150px;
 }
 .SC--waethers--forecast {
-  width: 90%;
-  /* background-color: red; */
-  /* align-items: cente; */
+  width: 100%;
 }
 /* SC DAILY WEATHER DETAILS */
 .SC--daily {
   border-top: 1px solid var(--default-bright-color);
 }
 .SC--daily-forecasts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.SC--daily-forecast {
   padding: 0.5rem 2rem 0.5rem 2rem;
   display: flex;
-  /* justify-content: space-between; */
-  align-content: center;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
   column-gap: 2rem;
   font-size: 1.6rem;
   font-weight: 600;
   border-bottom: 1px solid var(--default-bright-color);
+}
+.SC--daily-forecast p {
+  max-width: 3rem;
+}
+.SC--daily-forecast p:last-child {
+  width: auto;
 }
 .SC--daily-forecasts:last-child {
   border: none;
