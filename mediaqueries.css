@@ -6,6 +6,9 @@
   .skycast-basic-info {
     margin-top: 25vh;
   }
+  .skycast-full-details {
+    padding: 0;
+  }
   /*  */
   /* SC BASIC WEATHER INFORMATIONS */
   .SC-condition-details h3 {
