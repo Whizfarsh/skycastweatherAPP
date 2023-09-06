@@ -90,9 +90,6 @@
 }
 @media (max-width: 28rem) {
   /* */
-  .skycastmain-body {
-    height: 193vh;
-  }
   /*  */
   /* .searchwithothers {
     width: auto;

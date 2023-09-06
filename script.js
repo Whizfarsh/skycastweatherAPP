@@ -50,3 +50,37 @@ draggableElement.addEventListener('touchmove', e => {
 draggableElement.addEventListener('touchend', () => {
   startX = null;
 });
+
+//
+const deviceWidth = window.innerWidth;
+console.log('the device width is:', deviceWidth);
+// Get the height of the entire document (including content outside the viewport)
+const totalPageHeight = Math.max(
+  document.body.scrollHeight,
+  document.body.offsetHeight,
+  document.documentElement.clientHeight,
+  document.documentElement.scrollHeight,
+  document.documentElement.offsetHeight
+);
+
+console.log('Total page height:', totalPageHeight, 'px');
+
+function setHeight(percentagevalue) {
+  const backgroundSection = document.querySelector('.skycastmain-body');
+  console.log(backgroundSection.clientHeight);
+  const windowHeight = window.innerHeight;
+  console.log(`the height is: ${windowHeight}`);
+  // backgroundSection.style.height = windowHeight + 'px';
+  const newH = totalPageHeight + totalPageHeight * percentagevalue;
+  backgroundSection.style.height = newH + 'px';
+  console.log(backgroundSection.clientHeight);
+}
+
+// Call the function on page load and window resize
+if (deviceWidth <= 700) {
+  window.addEventListener('load', setHeight(0.03));
+  window.addEventListener('resize', setHeight(0.03));
+} else {
+  window.addEventListener('load', setHeight(0.001));
+  window.addEventListener('resize', setHeight(0.001));
+}
