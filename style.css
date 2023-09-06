@@ -221,7 +221,7 @@ html {
 .SC--daily-forecast p:last-child {
   width: auto;
 }
-.SC--daily-forecasts:last-child {
+.SC--daily-forecast:last-child {
   border: none;
 }
 
