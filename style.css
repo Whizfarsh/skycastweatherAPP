@@ -23,7 +23,7 @@ html {
 .skycastmain-body {
   background: url(/weathers/cloudy.jpg);
   width: 100%;
-  height: 110vh;
+  height: 100vh;
   display: block;
   background-repeat: no-repeat;
   background-position: center center;
@@ -141,7 +141,6 @@ html {
   display: flex;
   gap: 1rem;
   padding: 1.2rem 0 8px 1.2rem;
-  /* border-bottom: 1px solid var(--default-bright-color); */
   cursor: pointer;
 }
 .SC--hourly {
@@ -203,11 +202,12 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 .SC--daily-forecast {
+  width: 100%;
   padding: 0.5rem 2rem 0.5rem 2rem;
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
   column-gap: 2rem;
