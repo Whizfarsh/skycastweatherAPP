@@ -94,6 +94,12 @@
   /* .searchwithothers {
     width: auto;
   } */
+  .SC-desktop-menu {
+    column-gap: 3rem;
+  }
+  .logo {
+    font-size: 2.4rem;
+  }
   .skycast-full-details {
     display: flex;
     flex-direction: column;
