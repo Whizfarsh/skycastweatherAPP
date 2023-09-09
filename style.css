@@ -261,3 +261,37 @@ html {
   display: flex;
   flex-direction: column;
 }
+/* SC SEARCH RESULTS */
+.SC-search-results {
+  position: absolute;
+  top: 10vh;
+  right: 2rem;
+  width: 30%;
+  height: auto;
+  /* height: 60%; */
+  background-color: var(--default-bright-color);
+  padding: 0.5rem;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 1s;
+}
+.SC-search-location {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--default-dark-color);
+}
+.SC-search-flag {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+.SC-search-result {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid var(--default-dark-color);
+  /* background-color: #dbdbdb; */
+}
+.SC-search-result:last-child {
+  border: none;
+}

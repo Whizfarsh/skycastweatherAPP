@@ -87,6 +87,11 @@
     font-size: 1.8rem;
   }
   /* --- */
+  /* SC WEATHER SEARCH */
+  .SC-search-results {
+    width: 70%;
+  }
+  /*  */
 }
 @media (max-width: 28rem) {
   /* */

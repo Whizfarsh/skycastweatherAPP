@@ -1,5 +1,59 @@
 'use strict';
 
+// global scope variables
+// let cityName;
+// let cityCountryCode;
+// let cityLat;
+// let cityLong;
+
+const cityInput = document.getElementById('citysearch');
+const scSearchResults = document.querySelector('.SC-search-results');
+
+cityInput.addEventListener('click', function (e) {
+  e.preventDefault();
+  cityInput.addEventListener('input', function () {
+    const citiesInput = cityInput.value;
+    console.log(citiesInput);
+    fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${citiesInput}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        scSearchResults.innerHTML = '';
+        data.results.forEach(cities => {
+          const cityName = cities.name;
+          const cityCountryCode = cities.country_code;
+          const cityLat = cities.latitude;
+          const cityLong = cities.longitude;
+
+          const searchLocationHtml = `
+                  <div class="SC-search-result">
+                    <div class="SC-search-location-info">
+                      <p class="SC-search-location">${cityName}, ${cityCountryCode}</p>
+                      <span class="latnlong">${cityLat}, ${cityLong}</span>
+                    </div>
+                    <img src="/weathers/sunny.jpg" alt="" class="SC-search-flag" />
+                  </div>
+                  `;
+          //
+
+          scSearchResults.insertAdjacentHTML('beforeend', searchLocationHtml);
+          scSearchResults.style.opacity = 1;
+          // console.log(`${cities.name}, ${cities.country_code}`);
+
+          // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41
+
+          // return cityName;
+          // return cityCountryCode;
+
+          console.log('citiy Code', cityName, cityCountryCode);
+          console.log('citiy lat and long', cityLat, cityLong);
+        });
+      })
+      .catch(err => console.log(`invalid city ${err}`));
+  });
+});
+
+// for hourly scroll
 const fetchCountries = function () {
   fetch('https://restcountries.com/v3.1/all')
     .then(res => res.json())
@@ -51,7 +105,7 @@ draggableElement.addEventListener('touchend', () => {
   startX = null;
 });
 
-//
+//auto background image resize for all devices
 const setImageHeight = function () {
   const contentHeight = document.body.scrollHeight;
   const backgroundSection = document.querySelector('.skycastmain-body');
