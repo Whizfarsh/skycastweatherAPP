@@ -295,3 +295,9 @@ html {
 .SC-search-result:last-child {
   border: none;
 }
+.errorinfo {
+  /*  */
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+}

@@ -1,13 +1,17 @@
 'use strict';
 
-// global scope variables
-// let cityName;
-// let cityCountryCode;
-// let cityLat;
-// let cityLong;
-
 const cityInput = document.getElementById('citysearch');
 const scSearchResults = document.querySelector('.SC-search-results');
+
+// error function
+const errorMessage = function (msg) {
+  scSearchResults.insertAdjacentHTML(
+    'beforeend',
+    `
+    <p class="errorinfo">${msg}</p>
+  `
+  );
+};
 
 cityInput.addEventListener('click', function (e) {
   e.preventDefault();
@@ -15,7 +19,10 @@ cityInput.addEventListener('click', function (e) {
     const citiesInput = cityInput.value;
     console.log(citiesInput);
     fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${citiesInput}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) errorMessage('Not Found');
+        return res.json();
+      })
       .then(data => {
         console.log(data);
         scSearchResults.innerHTML = '';
@@ -38,18 +45,15 @@ cityInput.addEventListener('click', function (e) {
 
           scSearchResults.insertAdjacentHTML('beforeend', searchLocationHtml);
           scSearchResults.style.opacity = 1;
-          // console.log(`${cities.name}, ${cities.country_code}`);
-
-          // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41
-
-          // return cityName;
-          // return cityCountryCode;
 
           console.log('citiy Code', cityName, cityCountryCode);
           console.log('citiy lat and long', cityLat, cityLong);
         });
       })
-      .catch(err => console.log(`invalid city ${err}`));
+      .catch(err => {
+        err = errorMessage('Country not found');
+        scSearchResults.style.opacity = 1;
+      });
   });
 });
 
