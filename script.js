@@ -18,21 +18,26 @@ cityInput.addEventListener('click', function (e) {
   cityInput.addEventListener('input', function () {
     const citiesInput = cityInput.value;
     console.log(citiesInput);
-    fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${citiesInput}`)
-      .then(res => {
-        if (!res.ok) errorMessage('Not Found');
-        return res.json();
-      })
-      .then(data => {
-        console.log(data);
-        scSearchResults.innerHTML = '';
-        data.results.forEach(cities => {
-          const cityName = cities.name;
-          const cityCountryCode = cities.country_code;
-          const cityLat = cities.latitude;
-          const cityLong = cities.longitude;
+    if (citiesInput === '') {
+      scSearchResults.style.opacity = 0;
+    } else {
+      fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${citiesInput}`
+      )
+        .then(res => {
+          if (!res.ok) errorMessage('Not Found');
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+          scSearchResults.innerHTML = '';
+          data.results.forEach(cities => {
+            const cityName = cities.name;
+            const cityCountryCode = cities.country_code;
+            const cityLat = cities.latitude;
+            const cityLong = cities.longitude;
 
-          const searchLocationHtml = `
+            const searchLocationHtml = `
                   <div class="SC-search-result">
                     <div class="SC-search-location-info">
                       <p class="SC-search-location">${cityName}, ${cityCountryCode}</p>
@@ -41,19 +46,20 @@ cityInput.addEventListener('click', function (e) {
                     <img src="/weathers/sunny.jpg" alt="" class="SC-search-flag" />
                   </div>
                   `;
-          //
+            //
 
-          scSearchResults.insertAdjacentHTML('beforeend', searchLocationHtml);
+            scSearchResults.insertAdjacentHTML('beforeend', searchLocationHtml);
+            scSearchResults.style.opacity = 1;
+
+            console.log('citiy Code', cityName, cityCountryCode);
+            console.log('citiy lat and long', cityLat, cityLong);
+          });
+        })
+        .catch(err => {
+          err = errorMessage('Country not found');
           scSearchResults.style.opacity = 1;
-
-          console.log('citiy Code', cityName, cityCountryCode);
-          console.log('citiy lat and long', cityLat, cityLong);
         });
-      })
-      .catch(err => {
-        err = errorMessage('Country not found');
-        scSearchResults.style.opacity = 1;
-      });
+    }
   });
 });
 
