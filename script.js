@@ -1,7 +1,10 @@
 'use strict';
 
+let cityName, cityCountryCode, cityLat, cityLong, countryFlag;
+
 const cityInput = document.getElementById('citysearch');
 const scSearchResults = document.querySelector('.SC-search-results');
+// const scSearchResult = document.querySelector('.SC-search-result');
 
 // error function
 const errorMessage = function (msg) {
@@ -12,6 +15,19 @@ const errorMessage = function (msg) {
   `
   );
 };
+
+// Opacity function
+const setOpacity = function (opacity) {
+  scSearchResults.style.opacity = opacity;
+};
+
+// Handle click events using event delegation
+function handleClick(e) {
+  const targetResult = e.target.closest('.SC-search-result');
+  if (targetResult) {
+    console.log(targetResult.querySelector('.latnlong').textContent);
+  }
+}
 
 cityInput.addEventListener('click', function (e) {
   e.preventDefault();
@@ -29,30 +45,53 @@ cityInput.addEventListener('click', function (e) {
           return res.json();
         })
         .then(data => {
-          console.log(data);
           scSearchResults.innerHTML = '';
-          data.results.forEach(cities => {
-            const cityName = cities.name;
-            const cityCountryCode = cities.country_code;
-            const cityLat = cities.latitude;
-            const cityLong = cities.longitude;
 
-            const searchLocationHtml = `
-                  <div class="SC-search-result">
-                    <div class="SC-search-location-info">
-                      <p class="SC-search-location">${cityName}, ${cityCountryCode}</p>
-                      <span class="latnlong">${cityLat}, ${cityLong}</span>
-                    </div>
-                    <img src="/weathers/sunny.jpg" alt="" class="SC-search-flag" />
-                  </div>
-                  `;
-            //
+          // making array for the promise
+          const fetchingFlags = data.results.map(countries => {
+            const cityCountryCode = countries.country;
+            return fetch(
+              `https://restcountries.com/v3.1/name/${cityCountryCode}`
+            )
+              .then(res2 => {
+                if (!res2.ok) throw new Error('No Input Country Found');
+                return res2.json();
+              })
+              .then(data2 => {
+                countryFlag = data2[0].flags.png;
+                return countryFlag;
+              })
+              .catch(err => {
+                err = errorMessage('The country does not exist');
+              });
+          });
+          //promisifying all the array created earlier
+          Promise.all(fetchingFlags).then(countryFlags => {
+            scSearchResults.innerHTML = '';
+            data.results.forEach((cities, i) => {
+              cityName = cities.name;
+              cityCountryCode = cities.country;
+              cityLat = cities.latitude;
+              cityLong = cities.longitude;
+              countryFlag = countryFlags[i];
 
-            scSearchResults.insertAdjacentHTML('beforeend', searchLocationHtml);
-            scSearchResults.style.opacity = 1;
+              const searchLocationHtml = `
+              <div class="SC-search-result">
+                <div class="SC-search-location-info">
+                  <p class="SC-search-location">${cityName}, ${cityCountryCode}</p>
+                  <span class="latnlong">${cityLat}, ${cityLong}</span>
+                </div>
+                <img src="${countryFlag}" alt="" class="SC-search-flag" />
+              </div>
+              `;
+              //
 
-            console.log('citiy Code', cityName, cityCountryCode);
-            console.log('citiy lat and long', cityLat, cityLong);
+              scSearchResults.insertAdjacentHTML(
+                'beforeend',
+                searchLocationHtml
+              );
+              scSearchResults.style.opacity = 1;
+            });
           });
         })
         .catch(err => {
@@ -62,20 +101,6 @@ cityInput.addEventListener('click', function (e) {
     }
   });
 });
-
-// for hourly scroll
-const fetchCountries = function () {
-  fetch('https://restcountries.com/v3.1/all')
-    .then(res => res.json())
-    .then(data => {
-      const randNums = Math.floor(Math.random() * data.length);
-      console.log(randNums);
-      const ccc = data[randNums];
-      //   console.log(`${data[randNums]}`);
-      console.log(ccc.name.common);
-    });
-};
-fetchCountries();
 
 // touch
 let startX;
