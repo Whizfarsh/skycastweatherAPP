@@ -1,12 +1,18 @@
 'use strict';
 
-let cityName, cityCountryCode, cityLat, cityLong, countryFlag;
+let cityName,
+  cityCountryCode,
+  cityLat,
+  cityLong,
+  countryFlag,
+  selectedLatAndlong;
 
-const cityInput = document.getElementById('citysearch');
+let cityInput = document.getElementById('citysearch');
 const scSearchResults = document.querySelector('.SC-search-results');
-// const scSearchResult = document.querySelector('.SC-search-result');
+const scSearchResult = document.querySelector('.SC-search-result');
 
-// error function
+//FUNCTIONS
+// --error function
 const errorMessage = function (msg) {
   scSearchResults.insertAdjacentHTML(
     'beforeend',
@@ -16,7 +22,7 @@ const errorMessage = function (msg) {
   );
 };
 
-// Opacity function
+// --Opacity function
 const setOpacity = function (opacity) {
   scSearchResults.style.opacity = opacity;
 };
@@ -29,11 +35,19 @@ function handleClick(e) {
   }
 }
 
+//--Function for fetching
+const FetchJSON = function (url, errorMessage = 'Unable to the reguired data') {
+  fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMessage}`);
+    return response.json();
+  });
+};
+//--------------------
 cityInput.addEventListener('click', function (e) {
   e.preventDefault();
   cityInput.addEventListener('input', function () {
     const citiesInput = cityInput.value;
-    console.log(citiesInput);
+    // console.log(citiesInput);
     if (citiesInput === '') {
       scSearchResults.style.opacity = 0;
     } else {
@@ -49,7 +63,12 @@ cityInput.addEventListener('click', function (e) {
 
           // making array for the promise
           const fetchingFlags = data.results.map(countries => {
-            const cityCountryCode = countries.country;
+            cityCountryCode = countries.country;
+            cityCountryCode =
+              cityCountryCode === 'United States'
+                ? 'United States of America'
+                : cityCountryCode;
+
             return fetch(
               `https://restcountries.com/v3.1/name/${cityCountryCode}`
             )
@@ -58,13 +77,14 @@ cityInput.addEventListener('click', function (e) {
                 return res2.json();
               })
               .then(data2 => {
-                countryFlag = data2[0].flags.png;
+                countryFlag = data2[0].flags.svg;
                 return countryFlag;
               })
               .catch(err => {
                 err = errorMessage('The country does not exist');
               });
           });
+          // console.log(fetchingFlags);
           //promisifying all the array created earlier
           Promise.all(fetchingFlags).then(countryFlags => {
             scSearchResults.innerHTML = '';
@@ -101,7 +121,16 @@ cityInput.addEventListener('click', function (e) {
     }
   });
 });
-
+scSearchResults.addEventListener('click', function (e) {
+  setOpacity(0);
+  cityInput.value = '';
+  const resultContainer = e.target.closest('.SC-search-result');
+  const lanlongInfo = resultContainer.querySelector('.latnlong').textContent;
+  selectedLatAndlong = lanlongInfo.split(',');
+  // return selectedLatAndlong;
+  // console.log(latAndlong);
+  // console.log(selectedLatAndlong);
+});
 // touch
 let startX;
 let scrollLeft;
