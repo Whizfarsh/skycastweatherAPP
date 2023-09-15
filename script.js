@@ -36,10 +36,17 @@ function handleClick(e) {
 }
 
 //--Function for fetching
-const FetchJSON = function (url, errorMessage = 'Unable to the reguired data') {
+const FetchJSON = function (url, errorMessage = 'Something went wrong') {
   fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMessage}`);
     return response.json();
+  });
+};
+
+//-- GET USER DEFAULT LATITUDE AND LONGITUDE
+const getUserPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
 //--------------------
@@ -127,10 +134,31 @@ scSearchResults.addEventListener('click', function (e) {
   const resultContainer = e.target.closest('.SC-search-result');
   const lanlongInfo = resultContainer.querySelector('.latnlong').textContent;
   selectedLatAndlong = lanlongInfo.split(',');
+  // FetchJSON('', 'Unable to the required data');
   // return selectedLatAndlong;
   // console.log(latAndlong);
   // console.log(selectedLatAndlong);
 });
+
+const getWeatherInfo = async function () {
+  try {
+    const posUser = await getUserPosition();
+    const { latitude: lat, longitude: long } = posUser.coords;
+
+    const weatherFatch = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&current_weather=true&timezone=auto`
+    );
+    const weatherData = await weatherFatch.json();
+    const tempData = weatherData.hourly.temperature_2m[24];
+    const timeData = weatherData.hourly.time[24];
+    console.log(timeData);
+    console.log(tempData);
+    console.log(weatherData);
+  } catch (err) {
+    console.log(err);
+  }
+};
+getWeatherInfo();
 // touch
 let startX;
 let scrollLeft;
