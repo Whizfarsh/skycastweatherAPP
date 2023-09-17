@@ -10,6 +10,7 @@ let cityName,
 let cityInput = document.getElementById('citysearch');
 const scSearchResults = document.querySelector('.SC-search-results');
 const scSearchResult = document.querySelector('.SC-search-result');
+const SCHourlyDetails = document.querySelector('.SC-hourly-details');
 
 //FUNCTIONS
 // --error function
@@ -134,12 +135,9 @@ scSearchResults.addEventListener('click', function (e) {
   const resultContainer = e.target.closest('.SC-search-result');
   const lanlongInfo = resultContainer.querySelector('.latnlong').textContent;
   selectedLatAndlong = lanlongInfo.split(',');
-  // FetchJSON('', 'Unable to the required data');
-  // return selectedLatAndlong;
-  // console.log(latAndlong);
-  // console.log(selectedLatAndlong);
 });
-
+let dateRange = [];
+let tempRange = [];
 const getWeatherInfo = async function () {
   try {
     const posUser = await getUserPosition();
@@ -149,11 +147,37 @@ const getWeatherInfo = async function () {
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&current_weather=true&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
-    const tempData = weatherData.hourly.temperature_2m[24];
-    const timeData = weatherData.hourly.time[24];
-    console.log(timeData);
-    console.log(tempData);
-    console.log(weatherData);
+    const currentWeatherTime = weatherData.current_weather.time;
+    console.log(currentWeatherTime);
+    const tempData = weatherData.hourly.temperature_2m;
+    const timeData = weatherData.hourly.time;
+
+    //looping through and creating new array for time and temperature
+    timeData.forEach((theTime, i) => {
+      if (theTime >= currentWeatherTime) {
+        dateRange.push(theTime);
+        tempRange.push(tempData[i]);
+      }
+    });
+    tempRange = tempRange.splice(0, 25);
+    dateRange = dateRange.splice(0, 25);
+
+    dateRange.forEach((datesandtime, i) => {
+      const onlyTime = datesandtime.split('T');
+      const hourlyHtml = `
+      <div class="SC-hourly--TDI">
+                      <span>${onlyTime[1]}</span>
+                      <span>${tempRange[i]}°c</span>
+                      <span
+                        ><img
+                          src="icons/sun.png"
+                          class="SC--hourly-weather-icon"
+                          alt=""
+                      /></span>
+                    </div>
+      `;
+      SCHourlyDetails.insertAdjacentHTML('beforeend', hourlyHtml);
+    });
   } catch (err) {
     console.log(err);
   }
