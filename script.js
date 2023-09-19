@@ -11,6 +11,10 @@ let cityInput = document.getElementById('citysearch');
 const scSearchResults = document.querySelector('.SC-search-results');
 const scSearchResult = document.querySelector('.SC-search-result');
 const SCHourlyDetails = document.querySelector('.SC-hourly-details');
+const SCCurrentWeather = document.querySelector('.SC-current-weather');
+const SCWeatherDate = document.querySelector('.SC-weather-date');
+const SCWeatherLocation = document.querySelector('.SC-weather-location');
+const SCDetails = document.querySelector('.SC--details');
 
 //FUNCTIONS
 // --error function
@@ -92,7 +96,7 @@ cityInput.addEventListener('click', function (e) {
                 err = errorMessage('The country does not exist');
               });
           });
-          // console.log(fetchingFlags);
+
           //promisifying all the array created earlier
           Promise.all(fetchingFlags).then(countryFlags => {
             scSearchResults.innerHTML = '';
@@ -129,6 +133,8 @@ cityInput.addEventListener('click', function (e) {
     }
   });
 });
+
+//
 scSearchResults.addEventListener('click', function (e) {
   setOpacity(0);
   cityInput.value = '';
@@ -136,38 +142,87 @@ scSearchResults.addEventListener('click', function (e) {
   const lanlongInfo = resultContainer.querySelector('.latnlong').textContent;
   selectedLatAndlong = lanlongInfo.split(',');
 });
+
+// Getting the weather data and working with it.
 let dateRange = [];
 let tempRange = [];
+let cloudRange = [];
+let humidityRange = [];
+let windSpeedRange = [];
 const getWeatherInfo = async function () {
   try {
     const posUser = await getUserPosition();
     const { latitude: lat, longitude: long } = posUser.coords;
 
+    //
     const weatherFatch = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&current_weather=true&timezone=auto`
+      `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=sunrise,sunset&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
+    console.log(weatherData);
     const currentWeatherTime = weatherData.current_weather.time;
-    console.log(currentWeatherTime);
+    const currentWeatherTemp = Math.round(
+      weatherData.current_weather.temperature
+    );
+    let timeNow = currentWeatherTime.split('T');
+    timeNow = timeNow[1];
     const tempData = weatherData.hourly.temperature_2m;
     const timeData = weatherData.hourly.time;
+    const himidityData = weatherData.hourly.relativehumidity_2m;
+    const cloudData = weatherData.hourly.cloudcover;
+    const windspeedData = weatherData.hourly.windspeed_10m;
+
+    // updating the current weather status
+    //
+    const getLocation = await fetch(
+      `https://geocode.xyz/${lat},${long}?geoit=json`
+    );
+    const getLocationData = await getLocation.json();
+    SCWeatherLocation.textContent = getLocationData.city;
+    SCWeatherLocation.style.fontSize = '2.4rem';
+
+    SCCurrentWeather.textContent = `${currentWeatherTemp}°`;
+    // --for the date
+    const date = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const locale = 'en-US';
+
+    const dateNow = new Intl.DateTimeFormat(locale, options).format(date);
+    SCWeatherDate.textContent = dateNow;
 
     //looping through and creating new array for time and temperature
     timeData.forEach((theTime, i) => {
       if (theTime >= currentWeatherTime) {
         dateRange.push(theTime);
         tempRange.push(tempData[i]);
+        cloudRange.push(cloudData[i]);
+        humidityRange.push(himidityData[i]);
+        windSpeedRange.push(windspeedData[i]);
       }
     });
-    tempRange = tempRange.splice(0, 25);
-    dateRange = dateRange.splice(0, 25);
+    tempRange = tempRange.splice(0, 24);
+    dateRange = dateRange.splice(0, 24);
+    cloudRange = cloudRange.splice(0, 24);
+    humidityRange = humidityRange.splice(0, 24);
+    windSpeedRange = windSpeedRange.splice(0, 24);
 
     dateRange.forEach((datesandtime, i) => {
       const onlyTime = datesandtime.split('T');
+      if (onlyTime[1] === timeNow) {
+        onlyTime[1] = 'Now';
+
+        // insert weather inormations like cloudcover, wind speed, humidity
+        const weatherInfoHtml = `
+      <p class="SC-details"><span>Cloudy</span> ${cloudRange[i]}${weatherData.hourly_units.cloudcover}</p>
+                <p class="SC-details"><span>Humidity</span> ${humidityRange[i]}${weatherData.hourly_units.relativehumidity_2m}</p>
+                <p class="SC-details"><span>Wind</span> ${windSpeedRange[i]}${weatherData.hourly_units.windspeed_10m}</p>
+      `;
+        SCDetails.insertAdjacentHTML('beforebegin', weatherInfoHtml);
+      }
       const hourlyHtml = `
       <div class="SC-hourly--TDI">
                       <span>${onlyTime[1]}</span>
-                      <span>${tempRange[i]}°c</span>
+                      <span>${Math.round(tempRange[i])}°c</span>
                       <span
                         ><img
                           src="icons/sun.png"
