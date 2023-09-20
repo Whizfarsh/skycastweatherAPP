@@ -149,6 +149,7 @@ let tempRange = [];
 let cloudRange = [];
 let humidityRange = [];
 let windSpeedRange = [];
+// let dailyDateRange = [];
 const getWeatherInfo = async function () {
   try {
     const posUser = await getUserPosition();
@@ -156,7 +157,7 @@ const getWeatherInfo = async function () {
 
     //
     const weatherFatch = await fetch(
-      `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=sunrise,sunset&current_weather=true&windspeed_unit=mph&timezone=auto`
+      `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
     console.log(weatherData);
@@ -205,7 +206,8 @@ const getWeatherInfo = async function () {
     cloudRange = cloudRange.splice(0, 24);
     humidityRange = humidityRange.splice(0, 24);
     windSpeedRange = windSpeedRange.splice(0, 24);
-
+    dailyDateRange.push(dateRange.splice(0, 7));
+    console.log(dailyDateRange);
     dateRange.forEach((datesandtime, i) => {
       const onlyTime = datesandtime.split('T');
       if (onlyTime[1] === timeNow) {
@@ -233,6 +235,17 @@ const getWeatherInfo = async function () {
       `;
       SCHourlyDetails.insertAdjacentHTML('beforeend', hourlyHtml);
     });
+
+    //for daily forecasts
+    let dailyDateRange = [];
+
+    const dailyDate = weatherData.daily.time;
+    const dailyTempMinArray = weatherData.daily.temperature_2m_min;
+    const dailyTempMaxArray = weatherData.daily.temperature_2m_max;
+    // const dailyTemp = (dailyTempMin + dailyTempMax) / 2;
+    console.log(dailyTempMin);
+    console.log(dailyTemp);
+    console.log(dailyDate);
   } catch (err) {
     console.log(err);
   }
