@@ -15,6 +15,7 @@ const SCCurrentWeather = document.querySelector('.SC-current-weather');
 const SCWeatherDate = document.querySelector('.SC-weather-date');
 const SCWeatherLocation = document.querySelector('.SC-weather-location');
 const SCDetails = document.querySelector('.SC--details');
+const SCDailyForecasts = document.querySelector('.SC--daily-forecasts');
 
 //FUNCTIONS
 // --error function
@@ -206,8 +207,6 @@ const getWeatherInfo = async function () {
     cloudRange = cloudRange.splice(0, 24);
     humidityRange = humidityRange.splice(0, 24);
     windSpeedRange = windSpeedRange.splice(0, 24);
-    dailyDateRange.push(dateRange.splice(0, 7));
-    console.log(dailyDateRange);
     dateRange.forEach((datesandtime, i) => {
       const onlyTime = datesandtime.split('T');
       if (onlyTime[1] === timeNow) {
@@ -238,14 +237,44 @@ const getWeatherInfo = async function () {
 
     //for daily forecasts
     let dailyDateRange = [];
+    // dailyDateRange.push(dateRange.splice(0, 7));
+    // console.log(dailyDateRange);
 
     const dailyDate = weatherData.daily.time;
     const dailyTempMinArray = weatherData.daily.temperature_2m_min;
     const dailyTempMaxArray = weatherData.daily.temperature_2m_max;
+    dailyDate.forEach((daytime, i) => {
+      const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+
+      const newDate = new Date(daytime);
+      const weekDay = newDate.getDay();
+      const dayOfWeek = date.getDay() === weekDay ? 'Today' : weekDays[weekDay];
+
+      const dailyTemps = Math.floor(
+        (dailyTempMaxArray[i] + dailyTempMinArray[i]) / 2
+      );
+      const dailyForecastHtml = `
+      <div class="SC--daily-forecasts">
+                    <div class="SC--daily-forecast">
+                      <p>${dayOfWeek}</p>
+                      <p><span style="color: #fff">&#177;</span>${dailyTemps}°C</p>
+                      <p>Sunny</p>
+                      <p>
+                        <img
+                          src="icons/sun.png"
+                          class="SC--hourly-weather-icon"
+                          alt=""
+                        />
+                      </p>
+                    </div>
+      `;
+      SCDailyForecasts.insertAdjacentHTML('beforeend', dailyForecastHtml);
+    });
+
     // const dailyTemp = (dailyTempMin + dailyTempMax) / 2;
-    console.log(dailyTempMin);
-    console.log(dailyTemp);
-    console.log(dailyDate);
+    // console.log(dailyTempMin);
+    // console.log(dailyTemp);
+    // console.log(dailyDate);
   } catch (err) {
     console.log(err);
   }
