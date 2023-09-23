@@ -213,16 +213,13 @@ html {
   column-gap: 2rem;
   font-size: 2rem;
   font-weight: 600;
-  border-bottom: 1px solid var(--default-bright-color);
+  border-top: 1px solid var(--default-bright-color);
 }
 .SC--daily-forecast p {
   max-width: 3rem;
 }
 .SC--daily-forecast p:last-child {
   width: auto;
-}
-.SC--daily-forecast:last-child {
-  /* border: none; */
 }
 
 /* SC Other countries */
@@ -265,16 +262,17 @@ html {
 /* SC SEARCH RESULTS */
 .SC-search-results {
   position: absolute;
-  top: 10vh;
+  top: 9vh;
   right: 2rem;
   width: 30%;
-  height: auto;
+  height: 50vh;
   /* height: 60%; */
   background-color: var(--default-bright-color);
   padding: 0.5rem;
   /* background-color: rgba(0, 0, 0, 0.5); */
-  z-index: 5;
+  z-index: 999;
   opacity: 0;
+  overflow-y: auto;
   transition: opacity 1s;
 }
 .SC-search-location {
