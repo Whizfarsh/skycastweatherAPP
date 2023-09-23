@@ -158,7 +158,7 @@ const getWeatherInfo = async function () {
 
     //
     const weatherFatch = await fetch(
-      `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&windspeed_unit=mph&timezone=auto`
+      `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
     console.log(weatherData);
@@ -216,7 +216,7 @@ const getWeatherInfo = async function () {
         const weatherInfoHtml = `
       <p class="SC-details"><span>Cloudy</span> ${cloudRange[i]}${weatherData.hourly_units.cloudcover}</p>
                 <p class="SC-details"><span>Humidity</span> ${humidityRange[i]}${weatherData.hourly_units.relativehumidity_2m}</p>
-                <p class="SC-details"><span>Wind</span> ${windSpeedRange[i]}${weatherData.hourly_units.windspeed_10m}</p>
+                <p class="SC-details"><span>WindSpeed</span> ${windSpeedRange[i]}${weatherData.hourly_units.windspeed_10m}</p>
       `;
         SCDetails.insertAdjacentHTML('beforebegin', weatherInfoHtml);
       }
@@ -243,6 +243,7 @@ const getWeatherInfo = async function () {
     const dailyDate = weatherData.daily.time;
     const dailyTempMinArray = weatherData.daily.temperature_2m_min;
     const dailyTempMaxArray = weatherData.daily.temperature_2m_max;
+    const dailyWindSpeedMaxArray = weatherData.daily.windspeed_10m_max;
     dailyDate.forEach((daytime, i) => {
       const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
@@ -258,7 +259,7 @@ const getWeatherInfo = async function () {
                     <div class="SC--daily-forecast">
                       <p>${dayOfWeek}</p>
                       <p><span style="color: #fff">&#177;</span>${dailyTemps}°C</p>
-                      <p>Sunny</p>
+                      <p>${dailyWindSpeedMaxArray[i]}${weatherData.daily_units.windspeed_10m_max}</p>
                       <p>
                         <img
                           src="icons/sun.png"
@@ -270,11 +271,6 @@ const getWeatherInfo = async function () {
       `;
       SCDailyForecasts.insertAdjacentHTML('beforeend', dailyForecastHtml);
     });
-
-    // const dailyTemp = (dailyTempMin + dailyTempMax) / 2;
-    // console.log(dailyTempMin);
-    // console.log(dailyTemp);
-    // console.log(dailyDate);
   } catch (err) {
     console.log(err);
   }
