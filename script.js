@@ -16,6 +16,7 @@ const SCWeatherDate = document.querySelector('.SC-weather-date');
 const SCWeatherLocation = document.querySelector('.SC-weather-location');
 const SCDetails = document.querySelector('.SC--details');
 const SCDailyForecasts = document.querySelector('.SC--daily-forecasts');
+const SCOtherWeathers = document.querySelector('.SC-other--weathers');
 
 //FUNCTIONS
 // **FUNCTION FOR THE WEATHER **
@@ -167,7 +168,7 @@ function handleClick(e) {
 
 //--Function for fetching
 const FetchJSON = function (url, errorMessage = 'Something went wrong') {
-  fetch(url).then(response => {
+  return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errorMessage}`);
     return response.json();
   });
@@ -285,6 +286,34 @@ const getWeatherInfo = async function () {
   }
 };
 getWeatherInfo();
+
+// RANDOM COUNTRIES
+const countriesNums = [];
+FetchJSON('https://restcountries.com/v3.1/all').then(data => {
+  for (let i = 0; i < 3; i++) {
+    const randNUms = Math.floor(Math.random() * data.length);
+    if (!countriesNums.includes(randNUms)) {
+      countriesNums.push(randNUms);
+    }
+  }
+  countriesNums.forEach(nums => {
+    const randCountryName = data[nums].name.common;
+    const randCountryCapital = data[nums].capital[0];
+    SCOtherWeathers.insertAdjacentHTML(
+      'beforeend',
+      `
+      <div class="SC-random-countries">
+                <div class="SC--random">
+                  <p class="SC-randCountries">${randCountryCapital},<span> ${randCountryName}</span></p>
+                  <p class="SC-randWeather">25°c <span>Rainy</span></p>
+                </div>
+              </div>
+    `
+    );
+  });
+});
+// ---------------
+
 // touch
 let startX;
 let scrollLeft;
