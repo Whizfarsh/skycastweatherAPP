@@ -21,11 +21,16 @@ const SCDailyForecasts = document.querySelector('.SC--daily-forecasts');
 // **FUNCTION FOR THE WEATHER **
 const weatherAPP = async function (lats, longs) {
   try {
+    let dateRange = [];
+    let tempRange = [];
+    let cloudRange = [];
+    let humidityRange = [];
+    let windSpeedRange = [];
     const weatherFatch = await fetch(
       `https://api.open-meteo.com/v1/gfs?latitude=${lats}&longitude=${longs}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
-    console.log(weatherData);
+    // console.log(weatherData);
     const currentWeatherTime = weatherData.current_weather.time;
     const currentWeatherTemp = Math.round(
       weatherData.current_weather.temperature
@@ -67,13 +72,14 @@ const weatherAPP = async function (lats, longs) {
       }
     });
     tempRange = tempRange.splice(0, 24);
-    dateRange = dateRange.splice(0, 24);
+    dateRange = dateRange.slice(0, 24);
     cloudRange = cloudRange.splice(0, 24);
     humidityRange = humidityRange.splice(0, 24);
     windSpeedRange = windSpeedRange.splice(0, 24);
+
     dateRange.forEach((datesandtime, i) => {
       const onlyTime = datesandtime.split('T');
-      if (onlyTime[1] === timeNow) {
+      if (timeNow === onlyTime[1]) {
         onlyTime[1] = 'Now';
 
         // insert weather inormations like cloudcover, wind speed, humidity
@@ -100,10 +106,6 @@ const weatherAPP = async function (lats, longs) {
     });
 
     //for daily forecasts
-    let dailyDateRange = [];
-    // dailyDateRange.push(dateRange.splice(0, 7));
-    // console.log(dailyDateRange);
-
     const dailyDate = weatherData.daily.time;
     const dailyTempMinArray = weatherData.daily.temperature_2m_min;
     const dailyTempMaxArray = weatherData.daily.temperature_2m_max;
@@ -182,7 +184,6 @@ cityInput.addEventListener('click', function (e) {
   e.preventDefault();
   cityInput.addEventListener('input', function () {
     const citiesInput = cityInput.value;
-    // console.log(citiesInput);
     if (citiesInput === '') {
       scSearchResults.style.opacity = 0;
     } else {
@@ -268,25 +269,15 @@ scSearchResults.addEventListener('click', function (e) {
   const clickedLong = Number(selectedLatAndlong[1]);
   document.querySelectorAll('.SC-details').forEach(els => els.remove());
   document.querySelectorAll('.SC-hourly--TDI').forEach(els => els.remove());
-  // SCDetails.remove();
-  // SCHourlyDetails
+  document.querySelectorAll('.SC--daily-forecast').forEach(els => els.remove());
   weatherAPP(clickedLat, clickedLong);
-  console.log(clickedLat);
-  console.log(clickedLong);
 });
 
 // Getting the weather data and working with it.
-let dateRange = [];
-let tempRange = [];
-let cloudRange = [];
-let humidityRange = [];
-let windSpeedRange = [];
-// let dailyDateRange = [];
 const getWeatherInfo = async function () {
   try {
     const posUser = await getUserPosition();
     const { latitude: lat, longitude: long } = posUser.coords;
-
     //
     weatherAPP(lat, long);
   } catch (err) {
