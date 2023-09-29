@@ -254,11 +254,35 @@ html {
   margin-top: 2rem;
   font-size: 1.6rem;
   font-weight: 600;
+  animation: opac 1s ease-in forwards;
+  opacity: 0;
+  transform: translateX(100px);
 }
 .SC-randWeather {
   display: flex;
   flex-direction: column;
 }
+.SC--RC-1 {
+  animation-delay: 500ms;
+}
+.SC--RC-2 {
+  animation-delay: 700ms;
+}
+.SC--RC-3 {
+  animation-delay: 1000ms;
+}
+
+@keyframes opac {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
 /* SC SEARCH RESULTS */
 .SC-search-results {
   position: absolute;

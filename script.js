@@ -288,30 +288,51 @@ const getWeatherInfo = async function () {
 getWeatherInfo();
 
 // RANDOM COUNTRIES
-const countriesNums = [];
-FetchJSON('https://restcountries.com/v3.1/all').then(data => {
-  for (let i = 0; i < 3; i++) {
-    const randNUms = Math.floor(Math.random() * data.length);
-    if (!countriesNums.includes(randNUms)) {
-      countriesNums.push(randNUms);
+const randomCountriesGen = function () {
+  const countriesNums = [];
+  let randCountriesWeather;
+  FetchJSON('https://restcountries.com/v3.1/all').then(data => {
+    for (let i = 0; i < 3; i++) {
+      const randNUms = Math.floor(Math.random() * data.length);
+      if (!countriesNums.includes(randNUms)) {
+        countriesNums.push(randNUms);
+      }
     }
-  }
-  countriesNums.forEach(nums => {
-    const randCountryName = data[nums].name.common;
-    const randCountryCapital = data[nums].capital[0];
-    SCOtherWeathers.insertAdjacentHTML(
-      'beforeend',
-      `
-      <div class="SC-random-countries">
-                <div class="SC--random">
-                  <p class="SC-randCountries">${randCountryCapital},<span> ${randCountryName}</span></p>
-                  <p class="SC-randWeather">25°c <span>Rainy</span></p>
-                </div>
-              </div>
-    `
-    );
+    countriesNums.forEach((nums, i) => {
+      const randCountryName = data[nums].name.common;
+      const randCountryCapital = data[nums].capital[0];
+      const [lat, long] = data[nums].latlng;
+
+      //fetching the tempearture
+      return FetchJSON(
+        `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
+      ).then(data4 => {
+        randCountriesWeather = Math.floor(data4.current_weather.temperature);
+
+        //rendering data
+        SCOtherWeathers.style.opacity = 1;
+        SCOtherWeathers.insertAdjacentHTML(
+          'beforeend',
+          `
+          <div class="SC-random-countries SC--RC-${i + 1}">
+                    <div class="SC--random">
+                      <p class="SC-randCountries">${randCountryCapital},<span> ${randCountryName}</span></p>
+                      <p class="SC-randWeather">${randCountriesWeather}°c <span>Rainy</span></p>
+                    </div>
+                  </div>
+        `
+        );
+      });
+    });
   });
-});
+};
+randomCountriesGen();
+
+setInterval(function () {
+  document.querySelectorAll('.SC--random').forEach(els => els.remove());
+  randomCountriesGen();
+}, 300000);
+
 // ---------------
 
 // touch
