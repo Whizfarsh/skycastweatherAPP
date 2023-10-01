@@ -31,7 +31,7 @@ const weatherAPP = async function (lats, longs) {
       `https://api.open-meteo.com/v1/gfs?latitude=${lats}&longitude=${longs}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
     const weatherData = await weatherFatch.json();
-    // console.log(weatherData);
+    console.log(weatherData);
     const currentWeatherTime = weatherData.current_weather.time;
     const currentWeatherTemp = Math.round(
       weatherData.current_weather.temperature
@@ -63,9 +63,11 @@ const weatherAPP = async function (lats, longs) {
     SCWeatherDate.textContent = dateNow;
 
     //looping through and creating new array for time and temperature
+    let dateRanges = [];
+    dateRanges.push(currentWeatherTime);
     timeData.forEach((theTime, i) => {
       if (theTime >= currentWeatherTime) {
-        dateRange.push(theTime);
+        dateRanges.push(theTime);
         tempRange.push(tempData[i]);
         cloudRange.push(cloudData[i]);
         humidityRange.push(himidityData[i]);
@@ -73,11 +75,10 @@ const weatherAPP = async function (lats, longs) {
       }
     });
     tempRange = tempRange.splice(0, 24);
-    dateRange = dateRange.slice(0, 24);
+    dateRange = [...new Set(dateRanges)].splice(0, 24);
     cloudRange = cloudRange.splice(0, 24);
     humidityRange = humidityRange.splice(0, 24);
     windSpeedRange = windSpeedRange.splice(0, 24);
-
     dateRange.forEach((datesandtime, i) => {
       const onlyTime = datesandtime.split('T');
       if (timeNow === onlyTime[1]) {
@@ -326,12 +327,13 @@ const randomCountriesGen = function () {
     });
   });
 };
-randomCountriesGen();
 
 setInterval(function () {
   document.querySelectorAll('.SC--random').forEach(els => els.remove());
   randomCountriesGen();
 }, 300000);
+
+document.addEventListener('DOMContentLoaded', randomCountriesGen);
 
 // ---------------
 
