@@ -329,9 +329,11 @@ const randomCountriesGen = function () {
 };
 
 setInterval(function () {
-  document.querySelectorAll('.SC--random').forEach(els => els.remove());
+  document
+    .querySelectorAll('.SC-random-countries')
+    .forEach(els => els.remove());
   randomCountriesGen();
-}, 300000);
+}, 5000);
 
 document.addEventListener('DOMContentLoaded', randomCountriesGen);
 
@@ -383,4 +385,4 @@ const setImageHeight = function () {
   backgroundSection.style.height = newH + 'px';
 };
 window.addEventListener('load', setImageHeight);
-window.addEventListener('resize', setImageHeight);
+// window.addEventListener('resize', setImageHeight);
