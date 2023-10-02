@@ -333,7 +333,7 @@ setInterval(function () {
     .querySelectorAll('.SC-random-countries')
     .forEach(els => els.remove());
   randomCountriesGen();
-}, 5000);
+}, 300000);
 
 document.addEventListener('DOMContentLoaded', randomCountriesGen);
 
@@ -378,11 +378,11 @@ draggableElement.addEventListener('touchend', () => {
 });
 
 //auto background image resize for all devices
-const setImageHeight = function () {
-  const contentHeight = document.body.scrollHeight;
-  const backgroundSection = document.querySelector('.skycastmain-body');
-  const newH = contentHeight + 30;
-  backgroundSection.style.height = newH + 'px';
-};
-window.addEventListener('load', setImageHeight);
+// const setImageHeight = function () {
+//   const contentHeight = document.body.scrollHeight;
+//   const backgroundSection = document.querySelector('.skycastmain-body');
+//   const newH = contentHeight + 30;
+//   backgroundSection.style.height = newH + 'px';
+// };
+// window.addEventListener('load', setImageHeight);
 // window.addEventListener('resize', setImageHeight);
