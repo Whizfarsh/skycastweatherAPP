@@ -377,12 +377,27 @@ draggableElement.addEventListener('touchend', () => {
   startX = null;
 });
 
-//auto background image resize for all devices
-// const setImageHeight = function () {
-//   const contentHeight = document.body.scrollHeight;
-//   const backgroundSection = document.querySelector('.skycastmain-body');
-//   const newH = contentHeight + 30;
-//   backgroundSection.style.height = newH + 'px';
-// };
+// auto background image resize for all devices
+let newH;
+const setImageHeight = function () {
+  const deviceWidth = document.body.clientWidth;
+  const deviceH = document.body.clientHeight;
+  console.log(deviceH * 0.8);
+  const contentHeight = document.body.scrollHeight;
+  const backgroundSection = document.querySelector('.skycastmain-body');
+  // const newH = contentHeight + 30;
+  // const newH = deviceH + 30;
+  // const newH = deviceH + deviceH * 0.8;
+  newH = deviceWidth <= 450 ? deviceH + deviceH * 0.85 : deviceH + 30;
+  // if (deviceWidth <= 450) {
+  //   newH = deviceH + deviceH * 0.85;
+  // } else {
+  //   newH = deviceH + 30;
+  // }
+  backgroundSection.style.height = newH + 'px';
+  // console.log(newH);
+};
+setImageHeight();
+
 // window.addEventListener('load', setImageHeight);
 // window.addEventListener('resize', setImageHeight);
