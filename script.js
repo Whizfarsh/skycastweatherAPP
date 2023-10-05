@@ -86,9 +86,15 @@ const weatherAPP = async function (lats, longs) {
 
         // insert weather inormations like cloudcover, wind speed, humidity
         const weatherInfoHtml = `
-      <p class="SC-details"><span>Cloudy</span> ${cloudRange[i]}${weatherData.hourly_units.cloudcover}</p>
-                <p class="SC-details"><span>Humidity</span> ${humidityRange[i]}${weatherData.hourly_units.relativehumidity_2m}</p>
-                <p class="SC-details"><span>WindSpeed</span> ${windSpeedRange[i]}${weatherData.hourly_units.windspeed_10m}</p>
+      <p class="SC-details"><span>${cloudConditionCategory(
+        cloudRange[i]
+      )}</span> ${cloudRange[i]}${weatherData.hourly_units.cloudcover}</p>
+                <p class="SC-details"><span>Humidity</span> ${
+                  humidityRange[i]
+                }${weatherData.hourly_units.relativehumidity_2m}</p>
+                <p class="SC-details"><span>WindSpeed</span> ${
+                  windSpeedRange[i]
+                }${weatherData.hourly_units.windspeed_10m}</p>
       `;
         SCDetails.insertAdjacentHTML('beforebegin', weatherInfoHtml);
       }
@@ -98,7 +104,7 @@ const weatherAPP = async function (lats, longs) {
                       <span>${Math.round(tempRange[i])}°c</span>
                       <span
                         ><img
-                          src="icons/sun.png"
+                          src="${classifytemps(tempRange[i])}"
                           class="SC--hourly-weather-icon"
                           alt=""
                       /></span>
@@ -127,10 +133,12 @@ const weatherAPP = async function (lats, longs) {
                     <div class="SC--daily-forecast">
                       <p>${dayOfWeek}</p>
                       <p><span style="color: #fff">&#177;</span>${dailyTemps}°C</p>
-                      <p>${dailyWindSpeedMaxArray[i]}${weatherData.daily_units.windspeed_10m_max}</p>
+                      <p>${dailyWindSpeedMaxArray[i]}${
+        weatherData.daily_units.windspeed_10m_max
+      }</p>
                       <p>
                         <img
-                          src="icons/sun.png"
+                          src="${classifytemps(dailyTemps)}"
                           class="SC--hourly-weather-icon"
                           alt=""
                         />
@@ -181,6 +189,35 @@ const getUserPosition = function () {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
+
+// **CLOUD CONDITION FUNCTION
+const cloudConditionCategory = function (cloudclover) {
+  if (cloudclover < 10) {
+    return 'Clear Sky';
+  } else if (cloudclover >= 10 && cloudclover <= 50) {
+    return 'Partly Cloudy';
+  } else {
+    return 'cloudy';
+  }
+};
+
+// TEMPERATURE CLASSIFICATION FUNCTION
+const classifytemps = function (temp) {
+  if (temp < 10) {
+    // cold;
+    return `tmp/cold.png`;
+  } else if (temp > 10 && temp < 25) {
+    // cool;
+    return `tmp/cool.png`;
+  } else if (temp >= 25 && temp < 30) {
+    // warm;
+    return `tmp/hot.png`;
+  } else {
+    // hot;
+    return `tmp/hot.png`;
+  }
+};
+
 //--------------------
 cityInput.addEventListener('click', function (e) {
   e.preventDefault();
@@ -293,7 +330,7 @@ const randomCountriesGen = function () {
   const countriesNums = [];
   let randCountriesWeather;
   FetchJSON('https://restcountries.com/v3.1/all').then(data => {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const randNUms = Math.floor(Math.random() * data.length);
       if (!countriesNums.includes(randNUms)) {
         countriesNums.push(randNUms);
@@ -308,6 +345,7 @@ const randomCountriesGen = function () {
       return FetchJSON(
         `https://api.open-meteo.com/v1/gfs?latitude=${lat}&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
       ).then(data4 => {
+        // console.log(data4);
         randCountriesWeather = Math.floor(data4.current_weather.temperature);
 
         //rendering data
@@ -318,7 +356,7 @@ const randomCountriesGen = function () {
           <div class="SC-random-countries SC--RC-${i + 1}">
                     <div class="SC--random">
                       <p class="SC-randCountries">${randCountryCapital},<span> ${randCountryName}</span></p>
-                      <p class="SC-randWeather">${randCountriesWeather}°c <span>Rainy</span></p>
+                      <p class="SC-randWeather">${randCountriesWeather}°c </p>
                     </div>
                   </div>
         `
@@ -343,34 +381,16 @@ document.addEventListener('DOMContentLoaded', randomCountriesGen);
 let startX;
 let scrollLeft;
 const draggableElement = document.querySelector('.SC-hourly-details');
-
-// console.log(startX, scrollLeft);
-// console.log(`ofS1: ${draggableElement.offsetLeft}`);
 draggableElement.addEventListener('touchstart', e => {
-  // console.log(e);
-  // console.log(`T1: ${e.touches[0].pageX}`);
   startX = e.touches[0].pageX - draggableElement.offsetLeft;
-  // console.log(`StartX2: ${startX}`);
-  // console.log(draggableElement.scrollLeft);
-  //   console.log(draggableElement.offsetLeft);
   scrollLeft = draggableElement.scrollLeft;
-  // console.log(`S2: ${scrollLeft}`);
 });
 
 draggableElement.addEventListener('touchmove', e => {
-  // console.log(`StrX: ${startX}`);
-  // console.log(`T1: ${e.touches[0].pageX}`);
   if (!startX) return;
-
-  console.log(`ofS2: ${draggableElement.offsetLeft}`);
   const x = e.touches[0].pageX - draggableElement.offsetLeft;
-  console.log(`X: ${x}`);
-  console.log(`S3: ${draggableElement.scrollLeft}`);
   const walk = (x - startX) * 2; // Adjust this multiplier to control scrolling speed
-  console.log(`WK: ${walk}`);
   draggableElement.scrollLeft = scrollLeft - walk;
-  console.log(`S4: ${(draggableElement.scrollLeft = scrollLeft - walk)}`);
-  console.log(`S4: ${draggableElement.scrollLeft}`);
 });
 
 draggableElement.addEventListener('touchend', () => {
@@ -382,22 +402,16 @@ let newH;
 const setImageHeight = function () {
   const deviceWidth = document.body.clientWidth;
   const deviceH = document.body.clientHeight;
-  console.log(deviceH * 0.8);
-  const contentHeight = document.body.scrollHeight;
   const backgroundSection = document.querySelector('.skycastmain-body');
-  // const newH = contentHeight + 30;
-  // const newH = deviceH + 30;
-  // const newH = deviceH + deviceH * 0.8;
   newH = deviceWidth <= 450 ? deviceH + deviceH * 0.85 : deviceH + 30;
-  // if (deviceWidth <= 450) {
-  //   newH = deviceH + deviceH * 0.85;
-  // } else {
-  //   newH = deviceH + 30;
-  // }
   backgroundSection.style.height = newH + 'px';
-  // console.log(newH);
 };
 setImageHeight();
 
-// window.addEventListener('load', setImageHeight);
-// window.addEventListener('resize', setImageHeight);
+//
+
+window.addEventListener('load', function () {
+  console.log('fully loaded');
+  const imgForTemp = document.querySelector('.SC-hourly--TDI');
+  console.log(imgForTemp);
+});
