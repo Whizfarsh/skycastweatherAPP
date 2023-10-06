@@ -17,6 +17,8 @@ const SCWeatherLocation = document.querySelector('.SC-weather-location');
 const SCDetails = document.querySelector('.SC--details');
 const SCDailyForecasts = document.querySelector('.SC--daily-forecasts');
 const SCOtherWeathers = document.querySelector('.SC-other--weathers');
+const backgroundSection = document.querySelector('.skycastmain-body');
+// console.log((backgroundSection.style.backgroundImage = "url('weathers/cloudy.jpg')";
 
 //FUNCTIONS
 // **FUNCTION FOR THE WEATHER **
@@ -193,10 +195,14 @@ const getUserPosition = function () {
 // **CLOUD CONDITION FUNCTION
 const cloudConditionCategory = function (cloudclover) {
   if (cloudclover < 10) {
+    backgroundSection.style.backgroundImage = "url('weathers/clearsky.jpg')";
     return 'Clear Sky';
   } else if (cloudclover >= 10 && cloudclover <= 50) {
+    backgroundSection.style.backgroundImage =
+      "url('weathers/partlycloudy.jpg')";
     return 'Partly Cloudy';
   } else {
+    backgroundSection.style.backgroundImage = "url('weathers/cloudy.jpg')";
     return 'cloudy';
   }
 };
@@ -330,7 +336,7 @@ const randomCountriesGen = function () {
   const countriesNums = [];
   let randCountriesWeather;
   FetchJSON('https://restcountries.com/v3.1/all').then(data => {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
       const randNUms = Math.floor(Math.random() * data.length);
       if (!countriesNums.includes(randNUms)) {
         countriesNums.push(randNUms);
@@ -356,7 +362,10 @@ const randomCountriesGen = function () {
           <div class="SC-random-countries SC--RC-${i + 1}">
                     <div class="SC--random">
                       <p class="SC-randCountries">${randCountryCapital},<span> ${randCountryName}</span></p>
-                      <p class="SC-randWeather">${randCountriesWeather}°c </p>
+                      <p class="SC-randWeather">${randCountriesWeather}°c <span><img src="${classifytemps(
+            randCountriesWeather
+          )}" class="SC--hourly-weather-icon" />
+                      </span></p>
                     </div>
                   </div>
         `
@@ -402,16 +411,7 @@ let newH;
 const setImageHeight = function () {
   const deviceWidth = document.body.clientWidth;
   const deviceH = document.body.clientHeight;
-  const backgroundSection = document.querySelector('.skycastmain-body');
   newH = deviceWidth <= 450 ? deviceH + deviceH * 0.85 : deviceH + 30;
   backgroundSection.style.height = newH + 'px';
 };
 setImageHeight();
-
-//
-
-window.addEventListener('load', function () {
-  console.log('fully loaded');
-  const imgForTemp = document.querySelector('.SC-hourly--TDI');
-  console.log(imgForTemp);
-});
