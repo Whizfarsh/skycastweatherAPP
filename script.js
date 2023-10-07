@@ -18,9 +18,32 @@ const SCDetails = document.querySelector('.SC--details');
 const SCDailyForecasts = document.querySelector('.SC--daily-forecasts');
 const SCOtherWeathers = document.querySelector('.SC-other--weathers');
 const backgroundSection = document.querySelector('.skycastmain-body');
-// console.log((backgroundSection.style.backgroundImage = "url('weathers/cloudy.jpg')";
 
-//FUNCTIONS
+//
+const weatherBasicInfo = document.querySelector('.SC--weathers--info');
+
+// FUNCTIONS
+// **LOCATION FUNCTION**
+const getLocation = async function (lats, longs) {
+  try {
+    const userLocation = await fetch(
+      `https://geocode.xyz/${lats},${longs}?geoit=json`
+    );
+    if (!userLocation.ok) throw new Error("Can't get Location");
+    const userLocationData = await userLocation.json();
+
+    const userCurrentLocation =
+      userLocationData.city === 'Throttled! See geocode.xyz/pricing'
+        ? 'Unknown Location'
+        : userLocationData.city;
+    SCWeatherLocation.textContent = userCurrentLocation;
+    SCWeatherLocation.style.fontSize = '2.4rem';
+  } catch (err) {
+    SCWeatherLocation.textContent = err.message;
+  }
+};
+
+// ***
 // **FUNCTION FOR THE WEATHER **
 const weatherAPP = async function (lats, longs) {
   try {
@@ -32,6 +55,8 @@ const weatherAPP = async function (lats, longs) {
     const weatherFatch = await fetch(
       `https://api.open-meteo.com/v1/gfs?latitude=${lats}&longitude=${longs}&hourly=temperature_2m,relativehumidity_2m,cloudcover,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max&current_weather=true&windspeed_unit=mph&timezone=auto`
     );
+    if (!weatherFatch.ok) throw new Error('Weather Information not available');
+
     const weatherData = await weatherFatch.json();
     console.log(weatherData);
     const currentWeatherTime = weatherData.current_weather.time;
@@ -47,13 +72,7 @@ const weatherAPP = async function (lats, longs) {
     const windspeedData = weatherData.hourly.windspeed_10m;
 
     // updating the current weather status
-    //
-    const getLocation = await fetch(
-      `https://geocode.xyz/${lats},${longs}?geoit=json`
-    );
-    const getLocationData = await getLocation.json();
-    SCWeatherLocation.textContent = getLocationData.city;
-    SCWeatherLocation.style.fontSize = '2.4rem';
+    await getLocation(lats, longs);
 
     SCCurrentWeather.textContent = `${currentWeatherTemp}°`;
     // --for the date
@@ -149,8 +168,16 @@ const weatherAPP = async function (lats, longs) {
       `;
       SCDailyForecasts.insertAdjacentHTML('beforeend', dailyForecastHtml);
     });
+    randomCountriesGen();
+    setInterval(function () {
+      document
+        .querySelectorAll('.SC-random-countries')
+        .forEach(els => els.remove());
+      randomCountriesGen();
+    }, 60000);
   } catch (err) {
-    console.log(err);
+    SCWeatherLocation.textContent = err.message;
+    throw err;
   }
 };
 // ******
@@ -374,16 +401,6 @@ const randomCountriesGen = function () {
     });
   });
 };
-
-setInterval(function () {
-  document
-    .querySelectorAll('.SC-random-countries')
-    .forEach(els => els.remove());
-  randomCountriesGen();
-}, 300000);
-
-document.addEventListener('DOMContentLoaded', randomCountriesGen);
-
 // ---------------
 
 // touch
