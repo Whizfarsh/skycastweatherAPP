@@ -6,13 +6,16 @@
   box-sizing: border-box;
 }
 :root {
-  --default-bright-color: #f3f3f3;
+  --default-bright-color: #dbdbdb;
   --default-dark-color: #333;
 }
 
 html {
   font-size: 62.5%;
   font-family: 'Inter', sans-serif;
+}
+body {
+  background-color: #c2c2c2;
 }
 .skycast-main {
   max-width: 100%;
@@ -107,7 +110,7 @@ html {
 }
 .searchwithothers {
   width: 30%;
-  background: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
@@ -228,7 +231,7 @@ html {
 }
 .SC-rdw {
   font-size: 1.4rem;
-  color: var(--default-bright-color);
+  color: var(--default-dark-color);
   text-transform: uppercase;
 }
 .SC--random {

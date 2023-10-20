@@ -168,12 +168,9 @@ const weatherAPP = async function (lats, longs) {
       `;
       SCDailyForecasts.insertAdjacentHTML('beforeend', dailyForecastHtml);
     });
-    randomCountriesGen();
+    countryRandoms();
     setInterval(function () {
-      document
-        .querySelectorAll('.SC-random-countries')
-        .forEach(els => els.remove());
-      randomCountriesGen();
+      countryRandoms();
     }, 60000);
   } catch (err) {
     SCWeatherLocation.textContent = err.message;
@@ -181,6 +178,13 @@ const weatherAPP = async function (lats, longs) {
   }
 };
 // ******
+// random countries remove and add function
+const countryRandoms = () => {
+  document
+    .querySelectorAll('.SC-random-countries')
+    .forEach(els => els.remove());
+  randomCountriesGen();
+};
 // --error function
 const errorMessage = function (msg) {
   scSearchResults.insertAdjacentHTML(
@@ -422,13 +426,3 @@ draggableElement.addEventListener('touchmove', e => {
 draggableElement.addEventListener('touchend', () => {
   startX = null;
 });
-
-// auto background image resize for all devices
-let newH;
-const setImageHeight = function () {
-  const deviceWidth = document.body.clientWidth;
-  const deviceH = document.body.clientHeight;
-  newH = deviceWidth <= 450 ? deviceH + deviceH * 0.85 : deviceH + 30;
-  backgroundSection.style.height = newH + 'px';
-};
-setImageHeight();

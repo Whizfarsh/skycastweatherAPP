@@ -56,6 +56,9 @@
 
 @media (max-width: 41rem) {
   /* */
+  .skycastmain-body {
+    height: 115vh;
+  }
   /*  */
   .searchwithothers {
     width: auto;
@@ -63,7 +66,6 @@
   .skycast-full-details {
     display: grid;
     grid-template-columns: repeat(2, 45%);
-    /* padding-right: 2rem; */
   }
   /*  */
   /* SC BASIC WEATHER INFORMATIONS */
@@ -95,10 +97,9 @@
 }
 @media (max-width: 28rem) {
   /* */
-  /*  */
-  /* .searchwithothers {
-    width: auto;
-  } */
+  .skycastmain-body {
+    height: 33vh;
+  }
   .SC-desktop-menu {
     column-gap: 3rem;
   }
@@ -110,15 +111,8 @@
     flex-direction: column;
     row-gap: 2rem;
     padding: 2rem;
-    /* grid-template-columns: 80%; */
-    /* padding-right: 2rem; */
   }
   /*  */
-  /* SC BASIC WEATHER INFORMATIONS */
-  /* .SC-condition-details h3 {
-    font-size: 1.8rem;
-    padding: 0.95rem;
-  } */
   /*  ---- */
   /* SC DAILY WEATHERS */
   .SC--weathers--forecasts {
@@ -134,9 +128,5 @@
   .SC-other--weathers {
     margin-top: 0.4rem;
   }
-  /*
-  .SC-rdw {
-    font-size: 1.8rem;
-  } */
   /* --- */
 }
